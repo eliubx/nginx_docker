@@ -1,0 +1,33 @@
+# docker-compose.yml
+
+services:
+  all-in-one-server:
+    build: .
+    container_name: nginx-service
+    restart: unless-stopped
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+    env_file: .env
+    ports:
+      # --- 管理面板和工具端口 ---
+      - "${WEBSSH_HOST_PORT}:4200"
+      - "${PANEL_PORT}:${PANEL_PORT}"       # 3x-ui 面板端口
+      - "${NGINX_UI_PORT}:${NGINX_UI_PORT}" # Nginx-UI 面板端口
+      
+      # --- Nginx 网站服务端口 ---
+      # 你在 Nginx-UI 面板中创建的网站（监听80/443），需要在这里手动为它开放端口。
+      #- "8180:80"
+      #- "8143:443"
+
+      # --- 3x-ui 代理服务端口 ---
+      # 你在 3x-ui 面板中创建的入站，也需要在这里手动为它开放端口。
+      # - "10001:10001"
+      # - "10002:10002/udp"
+
+    volumes:
+      # 3x-ui 数据持久化
+      - ./data/3x-ui:/data/3x-ui
+      # Nginx-UI 数据持久化 (它会管理所有 Nginx 配置)
+      - ./data/nginx-ui:/etc/nginx-ui
+      
