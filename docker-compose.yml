@@ -8,7 +8,6 @@ services:
     dns:
       - 1.1.1.1
       - 8.8.8.8
-    env_file: .env
     ports:
       # --- 管理面板和工具端口 ---
       - "${WEBSSH_HOST_PORT}:4200"
